@@ -5,10 +5,11 @@ import java.util.List;
 import com.aj.blog.blogappapis.entities.Category;
 import com.aj.blog.blogappapis.entities.Post;
 import com.aj.blog.blogappapis.entities.User;
+import com.aj.blog.blogappapis.payloads.PostDto;
 
 public interface PostRepo extends JpaRepository<Post, Integer> {
 
     List<Post> findByUser(User user);
 
-    List<Category> findByCategory(Category category);
+    List<Post> findByCategory(Category category);
 }
