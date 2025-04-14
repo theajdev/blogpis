@@ -15,6 +15,7 @@ import com.aj.blog.blogappapis.entities.Post;
 import com.aj.blog.blogappapis.entities.User;
 import com.aj.blog.blogappapis.exceptions.ResourceNotFoundException;
 import com.aj.blog.blogappapis.payloads.PostDto;
+import com.aj.blog.blogappapis.payloads.PostResponse;
 import com.aj.blog.blogappapis.repositories.CategoryRepo;
 import com.aj.blog.blogappapis.repositories.PostRepo;
 import com.aj.blog.blogappapis.repositories.UserRepo;
@@ -81,13 +82,21 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPosts(int pageSize, int pageNumber) {
+	public PostResponse getAllPosts(int pageSize, int pageNumber) {
 		
 		PageRequest p = PageRequest.of(pageNumber, pageSize);
 		Page<Post> pages = postRepo.findAll(p);
 		List<Post> allPosts = pages.getContent();
 		List<PostDto> list = allPosts.stream().map((posts) -> PostToDto(posts)).collect(Collectors.toList());
-		return list;
+		
+		PostResponse postResposne=new PostResponse();
+		postResposne.setContent(list);
+		postResposne.setPageNumber(pages.getNumber());
+		postResposne.setPageSize(pages.getSize());
+		postResposne.setTotalELements(pages.getTotalElements());
+		postResposne.setTotalPages(pages.getTotalPages());
+		postResposne.setLastPage(pages.isLast());
+		return postResposne;
 	}
 
 	@Override
