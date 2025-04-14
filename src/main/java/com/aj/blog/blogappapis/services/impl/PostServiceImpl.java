@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.aj.blog.blogappapis.entities.Category;
@@ -82,9 +83,11 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostResponse getAllPosts(int pageSize, int pageNumber) {
+	public PostResponse getAllPosts(int pageSize, int pageNumber,String sortBy, String sortDir) {
 		
-		PageRequest p = PageRequest.of(pageNumber, pageSize);
+		Sort sort= sortDir.equalsIgnoreCase("asc")?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+		
+		PageRequest p = PageRequest.of(pageNumber, pageSize,sort);
 		Page<Post> pages = postRepo.findAll(p);
 		List<Post> allPosts = pages.getContent();
 		List<PostDto> list = allPosts.stream().map((posts) -> PostToDto(posts)).collect(Collectors.toList());
