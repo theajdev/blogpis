@@ -83,16 +83,16 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostResponse getAllPosts(int pageSize, int pageNumber,String sortBy, String sortDir) {
-		
-		Sort sort= sortDir.equalsIgnoreCase("asc")?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
-		
-		PageRequest p = PageRequest.of(pageNumber, pageSize,sort);
+	public PostResponse getAllPosts(int pageSize, int pageNumber, String sortBy, String sortDir) {
+
+		Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+		PageRequest p = PageRequest.of(pageNumber, pageSize, sort);
 		Page<Post> pages = postRepo.findAll(p);
 		List<Post> allPosts = pages.getContent();
 		List<PostDto> list = allPosts.stream().map((posts) -> PostToDto(posts)).collect(Collectors.toList());
-		
-		PostResponse postResposne=new PostResponse();
+
+		PostResponse postResposne = new PostResponse();
 		postResposne.setContent(list);
 		postResposne.setPageNumber(pages.getNumber());
 		postResposne.setPageSize(pages.getSize());
@@ -130,8 +130,9 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostDto> serachPosts(String keyWord) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Post> titleContaining = postRepo.findByTitleContaining(keyWord);
+		List<PostDto> list = titleContaining.stream().map((title)->PostToDto(title)).collect(Collectors.toList());
+		return list;
 	}
 
 	public PostDto PostToDto(Post post) {
