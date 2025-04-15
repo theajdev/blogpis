@@ -5,8 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.aj.AJLogger;
-
 @SpringBootApplication
 public class BlogAppApisApplication {
 
