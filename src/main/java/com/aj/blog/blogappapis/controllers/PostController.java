@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.aj.blog.blogappapis.config.AppConstants;
 import com.aj.blog.blogappapis.payloads.ApiResponse;
 import com.aj.blog.blogappapis.payloads.PostDto;
 import com.aj.blog.blogappapis.payloads.PostResponse;
 import com.aj.blog.blogappapis.services.FileService;
 import com.aj.blog.blogappapis.services.PostService;
+import com.aj.blog.blogappapis.utils.AppConstants;
 
 @RestController
 @RequestMapping("/api/")
