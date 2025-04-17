@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
         Integer userId = (int) ex.getFieldValue();
         ApiResponse apiResponse = new ApiResponse(message, false, userId);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
-
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
