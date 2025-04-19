@@ -1,6 +1,5 @@
 package com.aj.blog.blogappapis.payloads;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 import lombok.AllArgsConstructor;

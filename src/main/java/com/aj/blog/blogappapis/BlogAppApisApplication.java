@@ -35,6 +35,7 @@ public class BlogAppApisApplication implements CommandLineRunner{
 		System.out.println("Bcrypted password for rahul: "+passwordEncoder.encode("rahul@123"));
 		System.out.println("Bcrypted password for ram: "+passwordEncoder.encode("ram@123"));
         
+		 @SuppressWarnings("deprecation")
 		 Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 	        String base64Key = Base64.getEncoder().encodeToString(key.getEncoded());
 	        System.out.println("Base64 Key: " + base64Key);

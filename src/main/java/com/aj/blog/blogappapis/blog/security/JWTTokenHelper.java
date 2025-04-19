@@ -1,6 +1,5 @@
 package com.aj.blog.blogappapis.blog.security;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,8 +8,6 @@ import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.aj.blog.blogappapis.entities.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
