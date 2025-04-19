@@ -17,6 +17,8 @@ import com.aj.blog.blogappapis.blog.security.JWTTokenHelper;
 import com.aj.blog.blogappapis.exceptions.InvalidUserException;
 import com.aj.blog.blogappapis.payloads.JwtAuthRequest;
 import com.aj.blog.blogappapis.payloads.JwtAuthResponse;
+import com.aj.blog.blogappapis.payloads.UserDto;
+import com.aj.blog.blogappapis.services.UserService;
 
 @RestController
 @RequestMapping("/api/v1/auth/")
@@ -29,10 +31,13 @@ public class AuthController {
 	private UserDetailsService userDetailsService;
 
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@PostMapping("/login")
-	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest jwtAuthRequest) throws Exception{
+	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest jwtAuthRequest) throws Exception {
 		authenticate(jwtAuthRequest.getUsername(), jwtAuthRequest.getPassword());
 		UserDetails userDetails = userDetailsService.loadUserByUsername(jwtAuthRequest.getUsername());
 		String token = jwtTokenHelper.generateToken(userDetails);
@@ -41,7 +46,7 @@ public class AuthController {
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 
-	private void authenticate(String username, String password) throws Exception{
+	private void authenticate(String username, String password) throws Exception {
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
 				password);
 		try {
@@ -49,7 +54,14 @@ public class AuthController {
 		} catch (BadCredentialsException e) {
 			throw new InvalidUserException("Invalid Credentials");
 		}
-		
 
+	}
+	
+	//register new user api
+	@PostMapping("/register")
+	public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+		UserDto registeredUser = userService.RegisterNewUser(userDto);
+		
+		return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);
 	}
 }

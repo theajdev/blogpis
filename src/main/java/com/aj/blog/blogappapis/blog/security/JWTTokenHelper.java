@@ -9,6 +9,8 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.aj.blog.blogappapis.utils.AppConstants;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,8 +19,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTTokenHelper {
-	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-	private String secret = "j3SiEhng/Ojpn4QHU8l3UxQWv+GCvNn7/KyKhnlXEcVM7Zp36KDzhav7nFO+FhZky35e2Z7yiiqf07qB2Q0T1g==";
+	public static final long JWT_TOKEN_VALIDITY = AppConstants.JWT_TOKEN_VALIDITY;
+	private String secret = AppConstants.SECRET_KEY;
 
 	public String getUSernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -29,18 +31,14 @@ public class JWTTokenHelper {
 	}
 
 	private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims=getAllClaimsFromToken(token);
+		final Claims claims = getAllClaimsFromToken(token);
 		return claimsResolver.apply(claims);
 	}
 
 	@SuppressWarnings("deprecation")
 	private Claims getAllClaimsFromToken(String token) {
 		Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-		return Jwts.parser()
-		           .setSigningKey(key)
-		           .build()
-		           .parseClaimsJws(token)
-		           .getBody();
+		return Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
 	}
 
 	private Boolean isTokenExpired(String token) {
@@ -59,9 +57,9 @@ public class JWTTokenHelper {
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 100))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
-	
-	public Boolean validateToken(String token,UserDetails userDetails) {
-		final String username=getUSernameFromToken(token);
-		return (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
+
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		final String username = getUSernameFromToken(token);
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 }

@@ -34,6 +34,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable()) // disabled CSRF
 				.authorizeHttpRequests((auth) -> {
 					auth.requestMatchers("/api/v1/auth/login").permitAll();
+					auth.requestMatchers("/api/v1/auth/register").permitAll();
 					auth.requestMatchers("/api/users").hasAnyRole("ADMIN", "USER");
 					// auth.requestMatchers("/api/").hasAnyRole("ADMIN", "USER");
 					auth.requestMatchers(HttpMethod.DELETE, "/api/categories/").hasRole("ADMIN");

@@ -5,15 +5,16 @@ import java.util.List;
 import com.aj.blog.blogappapis.payloads.UserDto;
 
 public interface UserService {
+	UserDto RegisterNewUser(UserDto userDto);
 
-    UserDto createUser(UserDto userDto);
+	UserDto createUser(UserDto userDto);
 
-    UserDto updateUser(UserDto userDto, Integer userId);
+	UserDto updateUser(UserDto userDto, Integer userId);
 
-    UserDto getUserById(Integer userId);
+	UserDto getUserById(Integer userId);
 
-    List<UserDto> getAllUsers();
+	List<UserDto> getAllUsers();
 
-    void deleteUser(Integer userId);
+	void deleteUser(Integer userId);
 
 }
