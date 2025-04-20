@@ -3,8 +3,6 @@ package com.aj.blog.blogappapis.payloads;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.aj.blog.blogappapis.entities.Role;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

@@ -18,5 +18,17 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Access Denied !!");
 
 	}
+	
+	protected boolean shouldNotFilter(HttpServletRequest request) throws Exception {
+		  String path = request.getRequestURI();
+
+		    return path.startsWith("/api/v1/auth") ||
+		           path.startsWith("/v3/api-docs") ||
+		           path.startsWith("/swagger-ui") ||
+		           path.startsWith("/swagger-resources") ||
+		           path.startsWith("/webjars") ||
+		           path.startsWith("/configuration");
+
+	}
 
 }

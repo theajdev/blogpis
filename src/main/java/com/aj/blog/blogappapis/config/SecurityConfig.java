@@ -22,6 +22,11 @@ import com.aj.blog.blogappapis.blog.security.JwtAuthenticationFilter;
 @Configuration
 public class SecurityConfig {
 
+	public static final String[] PUBLIC_URLS = { "/api/v1/auth/**", "/v3/api-docs","/api-docs", "/v3/api-docs/**", "/v2/api-docs",
+			"/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**"
+
+	};
+
 	@Autowired
 	private CustomUserDetailService customUserDetailService;
 	@Autowired
@@ -32,15 +37,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()) // disabled CSRF
-				.authorizeHttpRequests((auth) -> {
-					auth.requestMatchers("/api/v1/auth/login").permitAll();
-					auth.requestMatchers("/api/v1/auth/register").permitAll();
-					auth.requestMatchers("/api/users").hasAnyRole("ADMIN", "USER");
-					// auth.requestMatchers("/api/").hasAnyRole("ADMIN", "USER");
-					auth.requestMatchers(HttpMethod.DELETE, "/api/categories/").hasRole("ADMIN");
-					auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-					auth.anyRequest().authenticated();
-				}).httpBasic(Customizer.withDefaults());
+				.authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll()
+						.requestMatchers("/api/users").hasAnyRole("ADMIN", "USER")
+						.requestMatchers(HttpMethod.DELETE, "/api/categories/").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated())
+				.httpBasic(Customizer.withDefaults());
 
 		http.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 		http.sessionManagement(ses -> ses.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // allow all

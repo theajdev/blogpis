@@ -1,7 +1,5 @@
 package com.aj.blog.blogappapis;
 
-import java.security.Key;
-import java.util.Base64;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -16,9 +14,6 @@ import com.aj.AJLogger;
 import com.aj.blog.blogappapis.entities.Role;
 import com.aj.blog.blogappapis.repositories.RoleRepository;
 import com.aj.blog.blogappapis.utils.AppConstants;
-
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @SpringBootApplication
 public class BlogAppApisApplication implements CommandLineRunner{
@@ -64,9 +59,9 @@ public class BlogAppApisApplication implements CommandLineRunner{
 			
 			List<Role> roles = List.of(role,role1);
 			List<Role> result = roleRepo.saveAll(roles);
-			result.forEach(r->{
-				AJLogger.log("BlogApp", "New Roles:"+r);
-			});
+			/*
+			 * result.forEach(r->{ AJLogger.log("BlogApp", "New Roles:"+r); });
+			 */
 		} catch (Exception e) {
 			AJLogger.log("BlogApp", "Exception: "+e);
 		}
