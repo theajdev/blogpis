@@ -1,6 +1,7 @@
 package com.aj.blog.blogappapis.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,10 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.aj.blog.blogappapis.blog.security.CustomUserDetailService;
 import com.aj.blog.blogappapis.blog.security.JWTAuthenticationEntryPoint;
 import com.aj.blog.blogappapis.blog.security.JwtAuthenticationFilter;
+
+import jakarta.servlet.Filter;
 
 @Configuration
 public class SecurityConfig {
@@ -38,8 +44,11 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()) // disabled CSRF
 				.authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll()
-						.requestMatchers("/api/users").hasAnyRole("ADMIN", "USER")
-						.requestMatchers(HttpMethod.DELETE, "/api/categories/").hasRole("ADMIN")
+						.requestMatchers("/api/v1/users").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults());
 
@@ -65,6 +74,20 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();
+	}
+	
+	@Bean
+	public FilterRegistrationBean<CorsFilter> corsFilter(){
+		UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.setAllowCredentials(true);
+		corsConfiguration.addAllowedOriginPattern("*");
+		corsConfiguration.addAllowedHeader("*");
+		corsConfiguration.addAllowedMethod("*");
+		corsConfiguration.setMaxAge(3600L);
+		source.registerCorsConfiguration("/**", corsConfiguration);
+		FilterRegistrationBean<CorsFilter> bean=new FilterRegistrationBean<>(new CorsFilter(source));
+		return bean;
 	}
 
 }

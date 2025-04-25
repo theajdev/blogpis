@@ -1,5 +1,6 @@
 package com.aj.blog.blogappapis.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aj.AJLogger;
 import com.aj.blog.blogappapis.blog.security.JWTTokenHelper;
+import com.aj.blog.blogappapis.entities.User;
 import com.aj.blog.blogappapis.exceptions.InvalidUserException;
 import com.aj.blog.blogappapis.payloads.JwtAuthRequest;
 import com.aj.blog.blogappapis.payloads.JwtAuthResponse;
 import com.aj.blog.blogappapis.payloads.UserDto;
 import com.aj.blog.blogappapis.services.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth/")
@@ -35,6 +40,9 @@ public class AuthController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@PostMapping("/login")
 	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest jwtAuthRequest) throws Exception {
@@ -43,6 +51,7 @@ public class AuthController {
 		String token = jwtTokenHelper.generateToken(userDetails);
 		JwtAuthResponse response = new JwtAuthResponse();
 		response.setToken(token);
+		response.setUser(this.modelMapper.map((User) userDetails,UserDto.class));
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 
@@ -59,7 +68,7 @@ public class AuthController {
 	
 	//register new user api
 	@PostMapping("/register")
-	public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+	public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto){
 		UserDto registeredUser = userService.RegisterNewUser(userDto);
 		
 		return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);

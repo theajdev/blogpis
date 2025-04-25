@@ -23,7 +23,7 @@ import com.aj.blog.blogappapis.services.CategoryService;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
 
     @Autowired

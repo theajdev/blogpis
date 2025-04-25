@@ -12,9 +12,5 @@ public class InvalidUserException extends RuntimeException {
 		// TODO Auto-generated constructor stub
 	}
 
-	public InvalidUserException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 }
