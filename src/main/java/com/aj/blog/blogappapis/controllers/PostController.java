@@ -1,11 +1,13 @@
 package com.aj.blog.blogappapis.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,8 @@ import com.aj.blog.blogappapis.payloads.PostResponse;
 import com.aj.blog.blogappapis.services.FileService;
 import com.aj.blog.blogappapis.services.PostService;
 import com.aj.blog.blogappapis.utils.AppConstants;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -110,6 +114,13 @@ public class PostController {
 		postDto.setImageName(fileName);
 		PostDto updatePost = postService.updatePost(postDto, postId);
 		return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/post/image/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
+	public void downloadImage(@PathVariable("imageName") String imageName, HttpServletResponse response) throws IOException {
+		InputStream resource = fileService.getResource(path, imageName);
+		response.setContentType(org.springframework.http.MediaType.IMAGE_JPEG_VALUE);
+		org.springframework.util.StreamUtils.copy(resource, response.getOutputStream());
 	}
 
 }

@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
 		postResposne.setContent(list);
 		postResposne.setPageNumber(pages.getNumber());
 		postResposne.setPageSize(pages.getSize());
-		postResposne.setTotalELements(pages.getTotalElements());
+		postResposne.setTotalElements(pages.getTotalElements());
 		postResposne.setTotalPages(pages.getTotalPages());
 		postResposne.setLastPage(pages.isLast());
 		return postResposne;

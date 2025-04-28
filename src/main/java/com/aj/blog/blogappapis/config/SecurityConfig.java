@@ -29,7 +29,7 @@ import jakarta.servlet.Filter;
 public class SecurityConfig {
 
 	public static final String[] PUBLIC_URLS = { "/api/v1/auth/**", "/v3/api-docs","/api-docs", "/v3/api-docs/**", "/v2/api-docs",
-			"/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**"
+			"/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**","/api/v1/posts"
 
 	};
 
@@ -46,6 +46,11 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_URLS).permitAll()
 						.requestMatchers("/api/v1/users").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+						.requestMatchers("/api/v1/user/*/category/*/posts").permitAll()
+						.requestMatchers(HttpMethod.GET,"/api/v1/posts/**").permitAll()
+						.requestMatchers(HttpMethod.POST,"/api/v1/post/image/upload/**").permitAll()
+						.requestMatchers("/api/v1/post/image/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/v1/posts/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasRole("ADMIN")
@@ -87,6 +92,7 @@ public class SecurityConfig {
 		corsConfiguration.setMaxAge(3600L);
 		source.registerCorsConfiguration("/**", corsConfiguration);
 		FilterRegistrationBean<CorsFilter> bean=new FilterRegistrationBean<>(new CorsFilter(source));
+		bean.setOrder(-110);
 		return bean;
 	}
 
