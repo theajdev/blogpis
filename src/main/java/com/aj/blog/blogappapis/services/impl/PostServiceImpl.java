@@ -2,6 +2,7 @@ package com.aj.blog.blogappapis.services.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -61,9 +62,11 @@ public class PostServiceImpl implements PostService {
 		
 		Post post = postRepo.findById(postId)
 				.orElseThrow(() -> new ResourceNotFoundException("Post", "post id", postId));
+		Category category = categoryRepo.findById(postDto.getCategory().getCategoryId()).get();
 		post.setTitle(postDto.getTitle());
 		post.setContent(postDto.getContent());
 		post.setImageName(postDto.getImageName());
+		post.setCategory(category);
 		post.setAddedDate(new Date());
 		Post updatedPost = postRepo.save(post);
 		PostDto newUpdatedPostDto = PostToDto(updatedPost);

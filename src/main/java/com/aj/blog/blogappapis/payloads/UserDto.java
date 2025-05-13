@@ -28,7 +28,7 @@ public class UserDto {
     private String email;
 
     @NotEmpty(message = "Password is required.")
-    @Size(min = 6, max = 10, message = "Password must be minimum 3 characters and maximum 10 characters !!")
+    @Size(min = 6, message = "Password must be minimum 3 characters !!")
     private String password;
 
     @NotEmpty
@@ -36,10 +36,7 @@ public class UserDto {
     
     private Set<RoleDto> roles=new HashSet<RoleDto>();
     
-    @JsonIgnore
-    public String getPassword() {
-		return password;
-	}
+    
     
     @JsonProperty
     public void setPassword(String password) {

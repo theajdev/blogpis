@@ -3,18 +3,21 @@ package com.aj.blog.blogappapis.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aj.AJLogger;
 import com.aj.blog.blogappapis.blog.security.JWTTokenHelper;
 import com.aj.blog.blogappapis.entities.User;
 import com.aj.blog.blogappapis.exceptions.InvalidUserException;
@@ -26,7 +29,7 @@ import com.aj.blog.blogappapis.services.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
 	@Autowired
@@ -68,9 +71,13 @@ public class AuthController {
 	
 	//register new user api
 	@PostMapping("/register")
-	public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto){
-		UserDto registeredUser = userService.RegisterNewUser(userDto);
+	public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto,@RequestParam(required = false) boolean isAdmin, Authentication auth){
+		 if (isAdmin && (auth == null || !auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+			 return new ResponseEntity<>("User must be an ADMIN.",HttpStatus.FORBIDDEN);
+		    }
 		
-		return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);
+		UserDto registeredUser = userService.RegisterNewUser(userDto,isAdmin);
+		
+		return new ResponseEntity<>(registeredUser,HttpStatus.CREATED);
 	}
 }

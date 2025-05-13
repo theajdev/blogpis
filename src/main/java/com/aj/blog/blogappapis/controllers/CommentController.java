@@ -21,9 +21,10 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 
-	@PostMapping("/post/{postId}/comments")
-	public ResponseEntity<CommentDto> createComments(@RequestBody CommentDto commentDto, @PathVariable int postId) {
-		CommentDto comment = commentService.createComment(commentDto, postId);
+	@PostMapping("/user/{userId}/post/{postId}/comments")
+	public ResponseEntity<CommentDto> createComments(@RequestBody CommentDto commentDto, @PathVariable int postId,
+			@PathVariable int userId) {
+		CommentDto comment = commentService.createComment(commentDto, postId, userId);
 		return new ResponseEntity<CommentDto>(comment, HttpStatus.OK);
 	}
 
@@ -32,4 +33,5 @@ public class CommentController {
 		commentService.deleteComment(commentId);
 		return new ResponseEntity<ApiResponse>(new ApiResponse("Comment deleted.", true, commentId), HttpStatus.OK);
 	}
+
 }
